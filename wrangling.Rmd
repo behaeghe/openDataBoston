@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r load some data}
+
+url <- "https://data.boston.gov/dataset/f9f57091-92f3-463a-8f1c-93e46361296d/resource/36fcf981-e414-4891-93ea-f5905cec46fc/download/streetconstruction.csv"
+bosdata <- read.csv(url,stringsAsFactors = FALSE)
+
+```
+```{r wrangling and beautifying}
+#Neighborhood as factors
+library(lubridate)
+bosdata$Neighborhood <- factor(bosdata$Neighborhood)
+#strinds that looks like dates as dates
+bosdata$ExpirationDate <- mdy_hm(bosdata$ExpirationDate)
+bosdata$EstimatedCompletionDate <- mdy_hm(bosdata$EstimatedCompletionDate)
+#Making full addresses
+bosdata$fullAddress <- paste(bosdata$Address1,bosdata$Street,"BOSTON,MA",' ')
+#Geocoding those addresses
+library(ggmap)
+bosdata$lat <- ggmap::geocode(bosdata$fullAddress)$lat
+bosdata$lon <- ggmap::geocode(bosdata$fullAddress)$lon
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
