@@ -24,8 +24,20 @@ bosdata$fullAddress <- paste(bosdata$Address1,bosdata$Street,"BOSTON,MA",' ')
 #Geocoding those addresses
 library(ggmap)
 bosdata$lat <- ggmap::geocode(bosdata$fullAddress)$lat
-bosdata$lon <- ggmap::geocode(bosdata$fullAddress)$lon
+bosdata$lng <- ggmap::geocode(bosdata$fullAddress)$lon
+save(bosdata,file="./data/bosdata.Rda")
+
 ```
+```{r}
+# now lets create a map
+
+bosmap <-leaflet() %>% 
+        addTiles() %>%
+        setView(lng = -71.0589, lat = 42.3601, zoom = 12) %>%
+        addMarkers(lat=bosdata$lat,lng=bosdata$lng,popup=bosdata$ProjectCategory)
+bosmap  
+```
+
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
